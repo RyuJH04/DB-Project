@@ -1,0 +1,13 @@
+# Node dependencies
+node_modules/
+
+# Environment variables
+*.env
+backend/.env
+
+# Build output (Vite)
+dist/
+
+# Mac/Windows system files (선택)
+.DS_Store
+Thumbs.db
