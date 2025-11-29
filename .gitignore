@@ -11,3 +11,9 @@ dist/
 # Mac/Windows system files (선택)
 .DS_Store
 Thumbs.db
+node_modules/
+.env
+.DS_Store
+node_modules/
+.env
+.DS_Store
