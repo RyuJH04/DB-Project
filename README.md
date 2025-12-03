@@ -1,9 +1,3 @@
-네, 보내주신 `README.md` 내용을 바탕으로, **Redis 설정**, **변경된 DB 스키마 초기화**, **지정가 주문 기능**에 대한 내용을 추가하여 팀원들이 헷갈리지 않도록 수정한 버전을 만들어 드립니다.
-
-그대로 복사해서 `README.md` 파일에 덮어씌우시면 됩니다.
-
------
-
 # DB-Project 개발 환경 안내
 
 이 문서는 팀원이 GitHub에서 이 프로젝트를 내려받은 후,  
@@ -94,6 +88,7 @@ SSH 포트포워딩이 켜진 상태에서, **새 터미널**을 열고 아래 �
 mysql --default-character-set=utf8mb4 -h 127.0.0.1 -P 2006 -u root -p webdb < database/schema.sql
 ```
 
+
   * 비밀번호: `rjh040328!`
   * **주의:** 기존 데이터는 초기화됩니다.
 
@@ -102,7 +97,6 @@ mysql --default-character-set=utf8mb4 -h 127.0.0.1 -P 2006 -u root -p webdb < da
 ## 6\. 백엔드 사용 방법 (Node.js + Express)
 
 ### 6.1. Redis 실행 확인
-
 백엔드를 켜기 전에 **반드시 로컬 컴퓨터에 Redis가 켜져 있어야 합니다.**
 
   * Windows: 작업 관리자 -\> 서비스 -\> `Redis`가 '실행 중'인지 확인.
