@@ -91,8 +91,60 @@ CREATE TABLE system_logs (
   FOREIGN KEY (user_id) REFERENCES users(user_id)
 ) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- 3. 인덱스 설정 (성능 최적화)
+-- 로그인 후 계좌 조회 시 user_id로 accounts를 자주 조회하므로 인덱스 추가
+CREATE INDEX idx_accounts_user_id 
+  ON accounts(user_id);
+
+-- 대시보드에서 계좌별 보유 종목 조회 시 account_number 조건으로 자주 검색하므로 인덱스 추가
+CREATE INDEX idx_portfolios_account_number 
+  ON portfolios(account_number);
+
+-- 종목 코드로 보유 종목/포트폴리오를 조회할 수 있으므로 인덱스 추가
+CREATE INDEX idx_portfolios_stock_code
+  ON portfolios(stock_code);
+
+-- 주문/대시보드에서 계좌별 주문내역 조회 시 account_number 조건을 사용하므로 인덱스 추가
+CREATE INDEX idx_orders_account_number 
+  ON orders(account_number);
+
+-- 매칭 엔진(matchOrders)에서 stock_code 조건으로 주문을 조회하므로 인덱스 추가
+CREATE INDEX idx_orders_stock_code 
+  ON orders(stock_code);
+
+-- 향후 특정 주문(order_id) 기준으로 거래내역을 조회할 때를 대비해 인덱스 추가
+CREATE INDEX idx_transactions_order_id 
+  ON transactions(order_id);
+
+-- 사용자별 로그 조회를 빠르게 하기 위해 인덱스 추가
+CREATE INDEX idx_system_logs_user_id
+  ON system_logs(user_id);
+
 -- [초기 데이터]
 INSERT INTO users (user_name, password, email) VALUES ('워렌버핏', '1234', 'buffet@test.com');
 INSERT INTO accounts VALUES ('100-1234-5678', 1, 100000000); 
-INSERT INTO stock_info VALUES ('005930', '삼성전자', 'KOSPI'), ('000660', 'SK하이닉스', 'KOSPI'), ('035420', 'NAVER', 'KOSPI');
-INSERT INTO stock_quote VALUES ('005930', 70000, 100000), ('000660', 120000, 50000), ('035420', 200000, 30000);
+-- IT 업종 주식 10종
+INSERT INTO stock_info VALUES
+('005930', '삼성전자', 'KOSPI'),
+('000660', 'SK하이닉스', 'KOSPI'),
+('035420', 'NAVER', 'KOSPI'),
+('035720', '카카오', 'KOSPI'),
+('066570', 'LG전자', 'KOSPI'),
+('012330', '현대모비스', 'KOSPI'),
+('096770', 'SK이노베이션', 'KOSPI'),
+('086790', '하나마이크론', 'KOSDAQ'),
+('034220', 'LG디스플레이', 'KOSPI'),
+('009150', '삼성전기', 'KOSPI');
+
+-- IT 업종 기본 시세 정보
+INSERT INTO stock_quote VALUES
+('005930', 70000, 100000),
+('000660', 120000, 50000),
+('035420', 200000, 30000),
+('035720', 50000, 40000),
+('066570', 90000, 25000),
+('012330', 230000, 18000),
+('096770', 160000, 20000),
+('086790', 27000, 50000),
+('034220', 14000, 70000),
+('009150', 155000, 15000);
