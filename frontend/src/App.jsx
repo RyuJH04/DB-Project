@@ -15,7 +15,7 @@ function App() {
   const [password, setPassword] = useState('');
 
   useEffect(() => {
-    if(user) {
+    if (user) {
       const interval = setInterval(() => {
         fetchStocks();
         fetchDashboard();
@@ -27,11 +27,11 @@ function App() {
   const login = async (e) => {
     e.preventDefault();
     const res = await fetch('/api/login', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({email, password})
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
     });
     const data = await res.json();
-    if(res.ok) setUser(data.user);
+    if (res.ok) setUser(data.user);
     else alert(data.error);
   };
 
@@ -41,27 +41,27 @@ function App() {
   };
 
   const fetchDashboard = async () => {
-    if(!user) return;
+    if (!user) return;
     const res = await fetch(`/api/dashboard/${user.user_id}`);
     setDashboard(await res.json());
   };
 
   const placeOrder = async (type) => {
-  if(!selectedStock) return alert('종목 선택');
-  if(!confirm(`${selectedStock.stock_name} ${qty}주를 ${price}원에 ${type === 'BUY'?'매수':'매도'}?`)) return;
+    if (!selectedStock) return alert('종목 선택');
+    if (!confirm(`${selectedStock.stock_name} ${qty}주를 ${price}원에 ${type === 'BUY' ? '매수하시겠습니까' : '매도하시겠습니까'}?`)) return;
 
-  const res = await fetch('/api/order', {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    // [수정] quantity: qty 추가
-    body: JSON.stringify({ userId: user.user_id, stockCode: selectedStock.stock_code, price: parseInt(price), orderType: type, quantity: parseInt(qty) })
-  });
-  const data = await res.json();
-  alert(data.message || data.error);
-  fetchDashboard();
-};
+    const res = await fetch('/api/order', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      // [수정] quantity: qty 추가
+      body: JSON.stringify({ userId: user.user_id, stockCode: selectedStock.stock_code, price: parseInt(price), orderType: type, quantity: parseInt(qty) })
+    });
+    const data = await res.json();
+    alert(data.message || data.error);
+    fetchDashboard();
+  };
 
   const cancelOrder = async (orderId) => {
-    if(!confirm('정말 이 주문을 취소하시겠습니까?')) return;
+    if (!confirm('정말 이 주문을 취소하시겠습니까?')) return;
 
     try {
       const res = await fetch('/api/cancel', {
@@ -70,7 +70,7 @@ function App() {
         body: JSON.stringify({ orderId })
       });
       const data = await res.json();
-      
+
       if (res.ok) {
         alert('주문이 취소되었습니다. (자산 환불 완료)');
         fetchDashboard(); // 잔고와 목록 갱신
@@ -86,8 +86,8 @@ function App() {
     <div className="login-container">
       <form onSubmit={login} className="login-box">
         <h2> Dongguk Trading</h2>
-        <input placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} />
-        <input type="password" placeholder="Password" value={password} onChange={e=>setPassword(e.target.value)} />
+        <input placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
+        <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
         <button>Login</button>
         <p>Tip: buffet@test.com / 1234</p>
       </form>
@@ -111,7 +111,7 @@ function App() {
           <ul>
             {stocks.map(s => (
               <li key={s.stock_code} onClick={() => { setSelectedStock(s); setPrice(s.current_price); }}
-                  className={selectedStock?.stock_code === s.stock_code ? 'active' : ''}>
+                className={selectedStock?.stock_code === s.stock_code ? 'active' : ''}>
                 <div className="row">
                   <span className="name">{s.stock_name}</span>
                   <span className="code">{s.stock_code}</span>
@@ -129,24 +129,24 @@ function App() {
             <div className="order-form">
               <div className="stock-title">{selectedStock.stock_name}</div>
               <div className="current-price-display">{selectedStock.current_price.toLocaleString()} KRW</div>
-              
+
               <div className="input-group">
                 <label>Price</label>
-                <input type="number" value={price} onChange={e=>setPrice(e.target.value)} />
+                <input type="number" value={price} onChange={e => setPrice(e.target.value)} />
               </div>
               <div className="input-group">
-  <label>Qty</label>
-  <input 
-    type="number" 
-    min="1"
-    value={qty} 
-    onChange={e => setQty(e.target.value)} 
-  />
-</div>
+                <label>Qty</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={qty}
+                  onChange={e => setQty(e.target.value)}
+                />
+              </div>
 
               <div className="btn-group">
-                <button className="buy-btn" onClick={()=>placeOrder('BUY')}>BUY</button>
-                <button className="sell-btn" onClick={()=>placeOrder('SELL')}>SELL</button>
+                <button className="buy-btn" onClick={() => placeOrder('BUY')}>BUY</button>
+                <button className="sell-btn" onClick={() => placeOrder('SELL')}>SELL</button>
               </div>
             </div>
           ) : <div className="empty-msg">Select a stock</div>}
@@ -158,7 +158,7 @@ function App() {
           <table>
             <thead><tr><th>Stock</th><th>Qty</th><th>Avg Price</th></tr></thead>
             <tbody>
-              {dashboard.portfolio.map((p,i) => (
+              {dashboard.portfolio.map((p, i) => (
                 <tr key={i}>
                   <td>{p.stock_name}</td>
                   <td>{p.quantity}</td>
@@ -172,47 +172,47 @@ function App() {
         {/* 4. 주문 내역 (하단) */}
         <div className="panel history-panel">
           <div className="tabs">
-            <button className={tab==='ACTIVE'?'active':''} onClick={()=>setTab('ACTIVE')}>Active Orders</button>
-            <button className={tab==='HISTORY'?'active':''} onClick={()=>setTab('HISTORY')}>Order History</button>
+            <button className={tab === 'ACTIVE' ? 'active' : ''} onClick={() => setTab('ACTIVE')}>Active Orders</button>
+            <button className={tab === 'HISTORY' ? 'active' : ''} onClick={() => setTab('HISTORY')}>Order History</button>
           </div>
-<div className="table-wrapper">
-  <table>
-    <thead>
-      <tr>
-        <th>Time</th><th>Stock</th><th>Type</th><th>Price</th><th>Status</th><th>Action</th> {/* Action 헤더 추가 */}
-      </tr>
-    </thead>
-    <tbody>
-      {tab === 'ACTIVE' ? dashboard.activeOrders.map((o,i) => (
-        <tr key={i}>
-          <td>{new Date().toLocaleTimeString()}</td> {/* Active는 시간 컬럼이 없어서 현재시간 임시 표시 */}
-          <td>{o.stock_name}</td>
-          <td className={o.order_type}>{o.order_type}</td>
-          <td>{Number(o.write_price).toLocaleString()}</td>
-          <td><span className="badge pending">{o.order_status}</span></td>
-          <td>
-            {/* 취소 버튼 추가 */}
-            <button 
-              onClick={() => cancelOrder(o.order_id)}
-              style={{ padding: '4px 8px', fontSize: '11px', cursor: 'pointer', background: '#d32f2f', color: 'white', border: 'none', borderRadius: '4px' }}
-            >
-              Cancel
-            </button>
-          </td>
-        </tr>
-      )) : dashboard.orderHistory.map((o,i) => (
-        <tr key={i}>
-          <td>{new Date(o.completed_at).toLocaleTimeString()}</td>
-          <td>{o.stock_name}</td>
-          <td className={o.order_type}>{o.order_type}</td>
-          <td>Fil: {o.final_filled_qty}</td>
-          <td><span className={`badge ${o.order_status === 'CANCELLED' ? 'cancelled' : 'filled'}`}>{o.order_status}</span></td>
-          <td>-</td> {/* 히스토리에는 버튼 없음 */}
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
+          <div className="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Time</th><th>Stock</th><th>Type</th><th>Price</th><th>Status</th><th>Action</th> {/* Action 헤더 추가 */}
+                </tr>
+              </thead>
+              <tbody>
+                {tab === 'ACTIVE' ? dashboard.activeOrders.map((o, i) => (
+                  <tr key={i}>
+                    <td>{new Date().toLocaleTimeString()}</td> {/* Active는 시간 컬럼이 없어서 현재시간 임시 표시 */}
+                    <td>{o.stock_name}</td>
+                    <td className={o.order_type}>{o.order_type}</td>
+                    <td>{Number(o.write_price).toLocaleString()}</td>
+                    <td><span className="badge pending">{o.order_status}</span></td>
+                    <td>
+                      {/* 취소 버튼 추가 */}
+                      <button
+                        onClick={() => cancelOrder(o.order_id)}
+                        style={{ padding: '4px 8px', fontSize: '11px', cursor: 'pointer', background: '#d32f2f', color: 'white', border: 'none', borderRadius: '4px' }}
+                      >
+                        Cancel
+                      </button>
+                    </td>
+                  </tr>
+                )) : dashboard.orderHistory.map((o, i) => (
+                  <tr key={i}>
+                    <td>{new Date(o.completed_at).toLocaleTimeString()}</td>
+                    <td>{o.stock_name}</td>
+                    <td className={o.order_type}>{o.order_type}</td>
+                    <td>Fil: {o.final_filled_qty}</td>
+                    <td><span className={`badge ${o.order_status === 'CANCELLED' ? 'cancelled' : 'filled'}`}>{o.order_status}</span></td>
+                    <td>-</td> {/* 히스토리에는 버튼 없음 */}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
