@@ -89,7 +89,7 @@ mysql --default-character-set=utf8mb4 -h 127.0.0.1 -P 2006 -u root -p webdb < da
 ```
 
 
-  * 비밀번호: `rjh040328!`
+  * 비밀번호: 
   * **주의:** 기존 데이터는 초기화됩니다.
 
 -----
